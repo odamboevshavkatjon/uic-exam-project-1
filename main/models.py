@@ -49,10 +49,14 @@ class LessonView(models.Model):
     status = models.BooleanField(default=False)  # view status
 
     def save(self, *args, **kwargs):
-        percentage = (self.watch_time / self.lesson.duration) * 100
+        percentage = 0
+        if self.watch_time is not 0:
+            percentage = (self.watch_time / self.lesson.duration) * 100
 
         if percentage >= 80:
             self.status = True
+        else:
+            self.status = False
 
         super().save(*args, **kwargs)
 

@@ -14,7 +14,9 @@ class Course(models.Model):
 class CourseAccess(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     course = models.ForeignKey(
-        Course, on_delete=models.CASCADE, related_name="courseaccess"
+        Course,
+        on_delete=models.CASCADE,
+        related_name="courseaccess",
     )
 
     granted_at = models.DateTimeField(auto_now_add=True)
@@ -33,7 +35,11 @@ class Lesson(models.Model):
 
 class LessonView(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    lesson = models.ForeignKey(
+        Lesson,
+        on_delete=models.CASCADE,
+        related_name="lesson_view",
+    )
 
     watched_at = models.DateTimeField(null=True, blank=True)
     status = models.BooleanField(default=False)  # view status

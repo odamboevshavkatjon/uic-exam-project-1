@@ -1,6 +1,12 @@
+from django.db.models import Prefetch
+from django.http import QueryDict
+
 from rest_framework import generics
 
-from .serializers import CourseSerializer
+from .serializers import (
+    CourseSerializer,
+    LessonSerializer,
+)
 from .models import (
     Course,
     CourseAccess,
@@ -9,13 +15,15 @@ from .models import (
 )
 
 
-class CourseListView(generics.ListAPIView):
-    serializer_class = CourseSerializer
+class LessonListView(generics.ListAPIView):
+    serializer_class = LessonSerializer
 
     def get_queryset(self):
         current_user = self.request.user
-        queryset = Course.objects.filter(courseaccess__user=current_user).distinct()
+        queryset = Lesson.objects.filter(
+            course__courseaccess__user=current_user
+        ).distinct()
         return queryset
 
 
-course_list_view = CourseListView.as_view()
+lesson_list_view = LessonListView.as_view()

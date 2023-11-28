@@ -1,8 +1,7 @@
-from django.db.models import Count, Sum, F, Subquery
+from django.db.models import Count, Sum, F, Subquery, ExpressionWrapper
 from django.db.models.functions import Coalesce
 
 from rest_framework import generics
-from rest_framework.response import Response
 
 from django.contrib.auth import get_user_model
 
@@ -63,7 +62,7 @@ class StatisticsView(generics.ListAPIView):
                 )
             ),
             access_percentage=(
-                Count("courseaccess__user", distinct=True) / User.objects.count()
+                Count("courseaccess__user", distinct=True) / float(User.objects.count())
             )
             * 100,
         )

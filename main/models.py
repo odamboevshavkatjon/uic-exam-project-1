@@ -24,7 +24,7 @@ class CourseAccess(models.Model):
 
 class Lesson(models.Model):
     title = models.CharField(max_length=255)
-    duration = models.PositiveIntegerField(default=0)
+    duration = models.PositiveIntegerField(default=0)  # time in seconds
     video_link = models.URLField()
 
     course = models.ManyToManyField(
@@ -44,8 +44,17 @@ class LessonView(models.Model):
         related_name="lesson_progress",
     )
 
+    watch_time = models.PositiveIntegerField(default=0)  # time in seconds
     watched_at = models.DateTimeField(null=True, blank=True)
-    status = models.BooleanField(default=False)  # view status_
+    status = models.BooleanField(default=False)  # view status
+
+    def save(self, *args, **kwargs):
+        percentage = (self.watch_time / self.lesson.duration) * 100
+
+        if percentage >= 80:
+            self.status = True
+
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "User Lesson View"

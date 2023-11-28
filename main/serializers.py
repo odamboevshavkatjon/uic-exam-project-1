@@ -12,6 +12,7 @@ class LessonViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = LessonView
         fields = (
+            "watch_time",
             "watched_at",
             "status",
         )

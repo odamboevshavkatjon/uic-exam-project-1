@@ -1,10 +1,15 @@
+from django.db.models import Count, Sum, F
+from django.db.models.functions import Coalesce
+
 from rest_framework import generics
+from rest_framework.response import Response
 
 from .serializers import (
     CourseSerializer,
     CourseAccessSerializer,
     LessonSerializer,
     LessonViewSerializer,
+    CourseStatisticsSerializer,
 )
 from .models import (
     Course,
@@ -36,3 +41,24 @@ class CourseDetailView(generics.RetrieveAPIView):
 
 
 course_detail_view = CourseDetailView.as_view()
+
+
+class StatisticsView(generics.ListAPIView):
+    serializer_class = CourseStatisticsSerializer
+
+    def get_queryset(self):
+        queryset = Course.objects.all().annotate(
+            course_participants_count=Count(
+                F("courseaccess__user"),
+            ),
+            total_watch_time=(
+                Coalesce(
+                    Sum(F("courseaccess__user__lessonview__watch_time")),
+                    0,
+                )
+            ),
+        )
+        return queryset
+
+
+statistics_view = StatisticsView.as_view()

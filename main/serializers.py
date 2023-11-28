@@ -46,3 +46,18 @@ class CourseSerializer(serializers.ModelSerializer):
             "owner",
             "lessons",
         )
+
+
+class CourseStatisticsSerializer(serializers.ModelSerializer):
+    course_participants_count = serializers.IntegerField()
+    total_watch_time = serializers.IntegerField()
+
+    class Meta:
+        model = Course
+        fields = (
+            "id",
+            "title",
+            "owner",
+            "course_participants_count",
+            "total_watch_time",
+        )

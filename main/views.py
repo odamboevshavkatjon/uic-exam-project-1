@@ -1,5 +1,4 @@
-from django.db.models import Prefetch
-from django.http import QueryDict
+from django.db.models import F
 
 from rest_framework import generics
 

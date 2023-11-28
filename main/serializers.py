@@ -49,8 +49,9 @@ class CourseSerializer(serializers.ModelSerializer):
 
 
 class CourseStatisticsSerializer(serializers.ModelSerializer):
-    course_participants_count = serializers.IntegerField()
+    course_participants = serializers.IntegerField()
     total_watch_time = serializers.IntegerField()
+    access_percentage = serializers.IntegerField()
 
     class Meta:
         model = Course
@@ -58,6 +59,7 @@ class CourseStatisticsSerializer(serializers.ModelSerializer):
             "id",
             "title",
             "owner",
-            "course_participants_count",
+            "course_participants",
             "total_watch_time",
+            "access_percentage",
         )

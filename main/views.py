@@ -1,8 +1,10 @@
-from django.db.models import Count, Sum, F
+from django.db.models import Count, Sum, F, Subquery
 from django.db.models.functions import Coalesce
 
 from rest_framework import generics
 from rest_framework.response import Response
+
+from django.contrib.auth import get_user_model
 
 from .serializers import (
     CourseSerializer,
@@ -17,6 +19,8 @@ from .models import (
     Lesson,
     LessonView,
 )
+
+User = get_user_model()
 
 
 class CourseListView(generics.ListAPIView):
@@ -48,8 +52,9 @@ class StatisticsView(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Course.objects.all().annotate(
-            course_participants_count=Count(
+            course_participants=Count(
                 "courseaccess__user",
+                distinct=True,
             ),
             total_watch_time=(
                 Coalesce(
@@ -57,6 +62,10 @@ class StatisticsView(generics.ListAPIView):
                     0,
                 )
             ),
+            access_percentage=(
+                Count("courseaccess__user", distinct=True) / User.objects.count()
+            )
+            * 100,
         )
         return queryset
 

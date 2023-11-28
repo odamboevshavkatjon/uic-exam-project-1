@@ -49,11 +49,11 @@ class StatisticsView(generics.ListAPIView):
     def get_queryset(self):
         queryset = Course.objects.all().annotate(
             course_participants_count=Count(
-                F("courseaccess__user"),
+                "courseaccess__user",
             ),
             total_watch_time=(
                 Coalesce(
-                    Sum(F("courseaccess__user__lessonview__watch_time")),
+                    Sum("courseaccess__user__lessonview__watch_time"),
                     0,
                 )
             ),

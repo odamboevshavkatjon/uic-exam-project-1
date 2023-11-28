@@ -1,10 +1,10 @@
-from django.db.models import F
-
 from rest_framework import generics
 
 from .serializers import (
     CourseSerializer,
+    CourseAccessSerializer,
     LessonSerializer,
+    LessonViewSerializer,
 )
 from .models import (
     Course,
@@ -14,15 +14,13 @@ from .models import (
 )
 
 
-class LessonListView(generics.ListAPIView):
-    serializer_class = LessonSerializer
+class CourseListView(generics.ListAPIView):
+    serializer_class = CourseSerializer
 
     def get_queryset(self):
         current_user = self.request.user
-        queryset = Lesson.objects.filter(
-            course__courseaccess__user=current_user
-        ).distinct()
+        queryset = Course.objects.filter(courseaccess__user=current_user).distinct()
         return queryset
 
 
-lesson_list_view = LessonListView.as_view()
+course_list_view = CourseListView.as_view()

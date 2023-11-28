@@ -13,13 +13,13 @@ class Course(models.Model):
 
 class CourseAccess(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    course = models.ForeignKey(
-        Course,
-        on_delete=models.CASCADE,
-        related_name="courseaccess",
-    )
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     granted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "User Course Access"
+        verbose_name_plural = "User Course Access"
 
 
 class Lesson(models.Model):
@@ -27,7 +27,10 @@ class Lesson(models.Model):
     duration = models.PositiveIntegerField(default=0)
     video_link = models.URLField()
 
-    course = models.ManyToManyField(Course)
+    course = models.ManyToManyField(
+        Course,
+        related_name="lessons",
+    )
 
     def __str__(self):
         return self.title
@@ -38,8 +41,12 @@ class LessonView(models.Model):
     lesson = models.ForeignKey(
         Lesson,
         on_delete=models.CASCADE,
-        related_name="lesson_view",
+        related_name="lesson_progress",
     )
 
     watched_at = models.DateTimeField(null=True, blank=True)
-    status = models.BooleanField(default=False)  # view status
+    status = models.BooleanField(default=False)  # view status_
+
+    class Meta:
+        verbose_name = "User Lesson View"
+        verbose_name_plural = "User Lesson Views"
